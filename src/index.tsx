@@ -1,5 +1,12 @@
+const erudaon = false;
+
+import 'primereact/resources/themes/lara-dark-cyan/theme.css';
+import 'primeflex/primeflex.css';
+import 'primeicons/primeicons.css';
+
 // Сначала включите стили пользовательского интерфейса Telegram, чтобы наш код мог переопределять CSS пакета.
 import '@telegram-apps/telegram-ui/dist/styles.css';
+import './index.css';
 
 import ReactDOM from 'react-dom/client';
 import { StrictMode } from 'react';
@@ -8,8 +15,6 @@ import { retrieveLaunchParams } from '@tma.js/sdk-react';
 import { Root } from '@/components/Root.tsx';
 import { EnvUnsupported } from '@/components/EnvUnsupported.tsx';
 import { init } from '@/init.ts';
-
-import './index.css';
 
 // Имитируем среду на случай, если мы находимся за пределами Telegram.
 import './mockEnv.ts';
@@ -25,7 +30,7 @@ try {
   // Настройте все зависимости приложения.
   await init({
     debug,
-    eruda: debug && ['ios', 'android'].includes(platform),
+    eruda: erudaon && debug && ['ios', 'android'].includes(platform),
     mockForMacOS: platform === 'macos',
   })
     .then(() => {

@@ -1,6 +1,5 @@
 import { themeParams, useSignal } from '@tma.js/sdk-react';
 import type { FC } from 'react';
-import { List } from '@telegram-apps/telegram-ui';
 
 import { DisplayData } from '@/components/DisplayData/DisplayData.tsx';
 import { Page } from '@/components/Page.tsx';
@@ -10,8 +9,9 @@ export const ThemeParamsPage: FC = () => {
 
   return (
     <Page>
-      <List>
+      <div>
         <DisplayData
+          header={'Параметры темы'}
           rows={
             Object
               .entries(tp)
@@ -23,7 +23,7 @@ export const ThemeParamsPage: FC = () => {
               }))
           }
         />
-      </List>
+      </div>
     </Page>
   );
 };

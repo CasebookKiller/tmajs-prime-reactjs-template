@@ -1,13 +1,14 @@
-import { type FC, useMemo } from 'react';
+import React, { type FC, useMemo } from 'react';
 import {
   initData,
   type User,
   useSignal,
 } from '@tma.js/sdk-react';
-import { List, Placeholder } from '@telegram-apps/telegram-ui';
 
 import { DisplayData, type DisplayDataRow } from '@/components/DisplayData/DisplayData.tsx';
 import { Page } from '@/components/Page.tsx';
+
+import './InitDataPage.css';
 
 function getUserRows(user: User): DisplayDataRow[] {
   return Object.entries(user).map(([title, value]) => ({ title, value }));
@@ -54,28 +55,33 @@ export const InitDataPage: FC = () => {
 
   if (!initDataRows) {
     return (
-      <Page>
-        <Placeholder
-          header='Ой'
-          description='Приложение было запущено без данных инициализации'
-        >
-          <img
-            alt='Наклейка Telegram'
-            src='https://xelene.me/telegram.gif'
-            style={{ display: 'block', width: '144px', height: '144px' }}
-          />
-        </Placeholder>
-      </Page>
+      <React.Fragment>
+        <div>
+          <section className="app placeholder">
+            <img
+              alt="Наклейка Telegram"
+              src="https://casebookkiller.github.io/prime-reactjs-template/telegram.gif" 
+              style={{display: 'block', width: '144px', height: '144px'}}
+            />
+            <dl>
+              <dt>
+                Ой
+              </dt>
+              <dd>
+                Приложение было запущено с отсутствующими данными инициализации
+              </dd>
+            </dl>
+          </section>
+        </div>
+      </React.Fragment>
     );
   }
   return (
     <Page>
-      <List>
-        <DisplayData header={'Данные инициализации'} rows={initDataRows}/>
-        {userRows && <DisplayData header={'Пользователь'} rows={userRows}/>}
-        {receiverRows && <DisplayData header={'Получатель'} rows={receiverRows}/>}
-        {chatRows && <DisplayData header={'Чат'} rows={chatRows}/>}
-      </List>
+      {<DisplayData header={'Данные инициализации'} rows={initDataRows}/>}
+      {userRows && <DisplayData header={'Пользователь'} rows={userRows}/>}
+      {receiverRows && <DisplayData header={'Получатель'} rows={receiverRows}/>}
+      {chatRows && <DisplayData header={'Чат'} rows={chatRows}/>}
     </Page>
   );
 };

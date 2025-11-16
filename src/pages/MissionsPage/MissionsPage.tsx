@@ -1,27 +1,50 @@
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
 
-import { openTelegramLink, retrieveLaunchParams, shareURL } from '@tma.js/sdk-react';
-import { Button, Cell, List} from '@telegram-apps/telegram-ui';
+import { openTelegramLink, shareURL, retrieveLaunchParams } from '@tma.js/sdk-react';
 
-import { ChevronRight, Check2, Exclamation, Share, ArrowClockwise } from 'react-bootstrap-icons';
+import { ChevronRight, Check2, Exclamation, Share } from 'react-bootstrap-icons';
+
 import { botMethod } from '@/api/bot/methods';
+
+import { Panel } from 'primereact/panel';
+import { PrimeReactProvider } from 'primereact/api';
+import { Timeline } from 'primereact/timeline';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Button } from 'primereact/button';
+
+import './MissionsPage.css';
+
+export const PrimeReactFlex = ({ children }: { children: ReactNode }) => {
+  return (
+    <div className="p-inputgroup flex-1">
+      {children}
+    </div>
+  )
+}
 
 interface Mission {
   id: number;
   title: string;
+  marker: ReactNode;
   after?: string;
   cb?: () => string;
 }
 
 export const MissionsPage: FC = () => {
-  const LP = retrieveLaunchParams(); console.log('LaunchParams: ', LP);
+  const LP = retrieveLaunchParams();
   const tgWebAppData = LP?.tgWebAppData;
-  const ID = tgWebAppData; console.log('ID: ', ID?.user?.id);
+  const ID = tgWebAppData;
+
+  //const refs = useRef<AntButtonRef[]>([]);
+  
+  const DefaultMarker = <div className='p-timeline-event-marker' data-pc-section='marker'/>;
+  const DisabledMarker = <div className='p-timeline-event-marker-disabled' data-pc-section='marker'/>;
 
   const [missions, setMissions] = useState<Mission[]>([
     {
       id: 1,
       title: 'Подписаться на новости',
+      marker: DefaultMarker,
       after: 'waiting', // 'waiting', 'success', 'error', 'checking', 'share'
       cb: () => {
         console.log('%ccasebook{killer} channel', `color: pink`);
@@ -37,8 +60,13 @@ export const MissionsPage: FC = () => {
           console.log(result.payload?.result?.status);
           if (result.payload?.result?.status === 'member') {
             setAfter(1, 'success');
+            setDisabled(1);
+            setMarker(1,'disabled');
           } else {
+            setActive(1);
             setAfter(1, 'waiting');
+            setMarker(1,'active');
+
             if (openTelegramLink.isAvailable()) {
               openTelegramLink('https://t.me/casebookkiller');
             }
@@ -53,15 +81,30 @@ export const MissionsPage: FC = () => {
     {
       id: 2,
       title: 'Поделиться',
+      marker: DefaultMarker,
       after: 'share',
       cb: () => {
-        const url = 'https://github.com/casebookkiller/reactjs-template';
-        const msg = `Шаблон для создания telegram-приложения: ${url}`;
+        console.log('случился вызов share...')
+        const url = 'https://t.me/' + import.meta.env.VITE_BOT_NAME;
+        const msg = `Приложение для расчета неустойки: ${url}`;
         shareURL(msg);
         return 'share';
       }
     }
   ]);
+
+  function setActive(id: number) {
+    setMissions((missions) => missions.map((mission) => mission.id === id ? {...mission, status: 'active'} : mission));
+  }
+
+  function setMarker(id: number, status: string) {
+    if (status === 'active') setMissions((missions) => missions.map((mission) => mission.id === id ? {...mission, marker: DefaultMarker} : mission));
+    if (status === 'disabled') setMissions((missions) => missions.map((mission) => mission.id === id ? {...mission, marker: DisabledMarker} : mission));
+  }
+
+  function setDisabled(id: number) {
+    setMissions((missions) => missions.map((mission) => mission.id === id ? {...mission, status: 'disabled'} : mission));
+  }
 
   function setAfter(id: number, after: string) {
     setMissions((missions) => missions.map((mission) => mission.id === id ? {...mission, after} : mission));
@@ -69,7 +112,8 @@ export const MissionsPage: FC = () => {
 
   function checkMission(task: Mission) {
     console.log('%cid: %o', `color: yellow`, task.id);
-    const status = task.cb ? task.cb(): 'waiting';
+    // здесь необходимо обходить выполнение колбэка при статусе share
+    const status = task.after === 'share' ? 'share' : task.cb ? task.cb(): 'waiting';
     
     return status; //'waiting', 'success', 'error', 'checking', 'share'
   }
@@ -85,58 +129,75 @@ export const MissionsPage: FC = () => {
   useEffect(() => {
     updateMissions();
   }, []);
-  
-  const cssDefault: CSSProperties = {
-    width: '60vw',
-    position: 'relative',
-    background: 'transparent',
-    borderColor: 'var(--tgui--link_color)',
-    color: 'var(--tgui--link_color)',
-    justifyContent: 'left'
-  };
-
-  const cssSuccess: CSSProperties = {
-    width: '60vw',
-    position: 'relative',
-    background: 'transparent',
-    borderColor: 'var(--tg-theme-hint-color)',
-    color: 'var(--tg-theme-hint-color)',
-    cursor: 'not-allowed',
-    justifyContent: 'left'
-  }
-
-  const items = missions.map((mission) => {
-    const { id, title, after, cb } = mission;
-    return (
-        <Cell
-          before={
-            <div>
-              {after === 'waiting' && <ChevronRight style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-accent-text-color)'}} strokeWidth="2" fill="var(--tg-theme-accent-text-color)"/>}
-              {after === 'checking' && <ArrowClockwise style={{marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem'}} strokeWidth="4" fill="var(--surface-ground)"/>}
-              {after === 'success' && <Check2 style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-hint-color)'}} strokeWidth="2" fill="var(--tg-theme-accent-text-color)"/>}
-              {after === 'error' && <Exclamation style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-destructive-text-color)'}} strokeWidth="1"/>}
-              {after === 'share' && <Share style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-accent-text-color)'}} strokeWidth="1"/>}
-            </div>
-          }
-          key={id}
-        >
-          <Button
-            style={after === 'success' ? cssSuccess : cssDefault}
-            onClick={()=>{cb?.()}}
-          >
-          <div className='flex flex-1' style={{width: '100%'}}>
-            <div className='flex-left-80'>{title}</div>
-          </div>
-          </Button>
-        </Cell>
-    );
-  });
 
   return (
-    <div className='MissionsPage'>
-      <List>
-        {items}
-      </List>
+    <div className="MissionsPage">
+      <Panel
+          className='shadow-5 mx-1 mt-1 mb-2'
+          header={'Задания'}
+          footer={'Выполнение заданий помогает приложению развиваться и улучшаться'}
+      >
+        <PrimeReactProvider>
+          <Timeline
+            align={'left'}
+            value={missions}
+            marker={(item) => item.marker}
+            className='mb-2'
+            content={(item) => {
+              console.log('%citem: %o', `color: cyan`, item);
+
+              return (
+                <React.Fragment>
+                  <Button
+                    className={item.status === 'disabled' ? 'app disabled text-base' : 'app default text-base'}
+                    style={{width: '100%'}}
+                    disabled={item.status === 'disabled'}
+                    outlined={true}
+                    onClick={() => {
+                      console.log('КЛИК', item);
+                      // здесь должна быть проверка на share
+                      if (item.after === 'share') {
+                        item.cb();
+                      } else {
+                        setMissions(missions.map((mission) => {
+                          if (mission.id === item.id) {
+                            //if (task.cb) task.cb();
+                            return {
+                              ...mission,
+                              after: 'checking'
+                            };
+                          }
+                          return mission;
+                        }));
+                        console.log('%citem.id: %o','color: yellow', item.id);
+                        setMissions(missions.map((mission) => {
+                          if (mission.id === item.id) {
+                            //if (task.cb) task.cb();
+                            return {...mission, after: checkMission(mission)};
+                          }
+                          return mission;
+                        }));
+                      }
+                    }}
+                    
+                  >
+                    <PrimeReactFlex>
+                      <div style={{width: '80%', textAlign: 'left'}}>{item.title}</div>
+                      <div style={{width: '20%', textAlign: 'right'}}>
+                        {item.after === 'waiting' && <ChevronRight style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-accent-text-color)'}} strokeWidth="2" fill="var(--tg-theme-accent-text-color)"/>}
+                        {item.after === 'checking' && <ProgressSpinner style={{marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem'}} strokeWidth="4" fill="var(--surface-ground)" animationDuration=".5s"/>}
+                        {item.after === 'success' && <Check2 style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-hint-color)'}} strokeWidth="2" fill="var(--tg-theme-accent-text-color)"/>}
+                        {item.after === 'error' && <Exclamation style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-destructive-text-color)'}} strokeWidth="1"/>}
+                        {item.after === 'share' && <Share style={{position: 'relative', marginLeft: '0.5rem', top: '0.2rem', width: '1rem', height: '1rem', stroke: 'var(--tg-theme-accent-text-color)'}} strokeWidth="1"/>}
+                      </div>
+                    </PrimeReactFlex>
+                  </Button>
+                </React.Fragment>
+              );
+            }}
+          />
+        </PrimeReactProvider>
+      </Panel>
     </div>
   );
 };
