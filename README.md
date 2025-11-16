@@ -157,16 +157,16 @@ npm run dev:https
 ```bash
 VITE v5.2.12  ready in 237 ms
 
-➜  Local:   https://localhost:5173/tmajs-reactjs-template
-➜  Network: https://172.18.16.1:5173/tmajs-reactjs-template
-➜  Network: https://172.19.32.1:5173/tmajs-reactjs-template
-➜  Network: https://192.168.0.171:5173/tmajs-reactjs-template
+➜  Local:   https://localhost:5173/tmajs-prime-reactjs-template
+➜  Network: https://172.18.16.1:5173/tmajs-prime-reactjs-template
+➜  Network: https://172.19.32.1:5173/tmajs-prime-reactjs-template
+➜  Network: https://192.168.0.171:5173/tmajs-prime-reactjs-template
 ➜  press h + enter to show help
 ```
 
 Здесь вы можете увидеть ссылку `Local`, доступную локально, и ссылку `Network`, доступную для всех устройств в той же сети, что и текущее устройство.
 
-Чтобы просмотреть приложение, вам необходимо открыть ссылку `Local` (в данном примере `http://localhost:5173/tnajs-reactjs-template`) в вашем браузере:
+Чтобы просмотреть приложение, вам необходимо открыть ссылку `Local` (в данном примере `http://localhost:5173/tmajs-prime-reactjs-template`) в вашем браузере:
 
 ![Приложение](assets/application.png)
 

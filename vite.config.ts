@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/tmajs-reactjs-template/',
+  base: '/tmajs-prime-reactjs-template/',
   css: {
     preprocessorOptions: {
       scss: {
