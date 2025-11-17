@@ -66,7 +66,7 @@ if (import.meta.env.DEV) {
           ['hash', import.meta.env.VITE_MOCK_HASH || 'some-hash'],
           ['signature', import.meta.env.VITE_MOCK_SIGNATURE || 'some-signature'],
           ['start_param', import.meta.env.VITE_MOCK_START_PARAM || 'debug'],
-          ['chat_instance', import.meta.env.VITE_MOCK_CHAT_INSTANCE || '8428209589180549439'],
+          ['chat_instance', import.meta.env.VITE_MOCK_CHAT_INSTANCE || 'some-instance'],
           ['chat_type', 'sender'],
           ['user', JSON.stringify({
             id: Number(import.meta.env.VITE_MOCK_USER_ID) || 99281932,
@@ -78,7 +78,7 @@ if (import.meta.env.DEV) {
             allows_write_to_pm: true,
           })],
         ]).toString()],
-        ['tgWebAppVersion', '8.4'],
+        ['tgWebAppVersion', '9.1'],
         ['tgWebAppPlatform', 'tdesktop'],
       ]),
     });

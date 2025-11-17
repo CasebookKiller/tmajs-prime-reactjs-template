@@ -6,7 +6,7 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
 - [@tma.js SDK](https://docs.telegram-mini-apps.com/packages/tma-js-sdk)
-- [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
+- [PrimeReact](https://primereact.org/)
 - [Supabase](https://supabase.com/)
 - [Vite](https://vitejs.dev/)
 
@@ -42,10 +42,17 @@ npm run {script}
 
 Прежде чем вы начнёте, у вас уже должен быть создан Телеграм Бот. Здесь [исчерпывающее руководство](https://docs.telegram-mini-apps.com/platform/creating-new-app) как это сделать.
 
-В папке проекта создайте файл .env.local и добавьте в него переменную:
+В папке проекта создайте файл .env.local и добавьте в него переменные:
 
 ```bash
+VITE_BOT_NAME='<имя вашего бота>'
 VITE_BOT_TOKEN='<ваш BOT_TOKEN>'
+VITE_MOCK_USER_ID='<идентификатор пользователя для тестирования>'
+VITE_MOCK_HASH='<hash код для тестирования>'
+VITE_MOCK_SIGNATURE='<signature код для тестирования>'
+VITE_MOCK_CHAT_INSTANCE='<chat_instance код для тестирования>'
+VITE_MOCK_START_PARAM='<параметр запуска для тестирования. Например, debug>'          
+
 ```
 
 ## Настройка Supabase
@@ -123,9 +130,16 @@ with check (true);
 Для работы шаблона достаточно указать в нем ID пользователя, которого вы хотите использовать в приложении,  в переменной `VITE_MOCK_USER_ID` в файле `.env.local`.
 
 ```ts
-  const initDataRaw = new URLSearchParams([
+  ...
+  ['tgWebAppData', new URLSearchParams([
+    ['auth_date', (new Date().getTime() / 1000 | 0).toString()],
+    ['hash', import.meta.env.VITE_MOCK_HASH || 'some-hash'],
+    ['signature', import.meta.env.VITE_MOCK_SIGNATURE || 'some-signature'],
+    ['start_param', import.meta.env.VITE_MOCK_START_PARAM || 'debug'],
+    ['chat_instance', import.meta.env.VITE_MOCK_CHAT_INSTANCE || 'some-instance'],
+    ['chat_type', 'sender'],
     ['user', JSON.stringify({
-      id: import.meta.env.VITE_MOCK_USER_ID || 99281932,
+      id: Number(import.meta.env.VITE_MOCK_USER_ID) || 99281932,
       first_name: 'Ivan',
       last_name: 'Petrov',
       username: 'petrov',
@@ -133,13 +147,10 @@ with check (true);
       is_premium: true,
       allows_write_to_pm: true,
     })],
-    ['signature', 'wP0hiNsZtrjRu_f8IE9rbgjic-lnFm4MoSBPKhMvOtZgJDqA8SSQN421SsnqxQResAsZaShR4eUuL4WKUAQLCQ'],
-    ['hash', '89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31'],
-    ['auth_date', '1716922846'],
-    ['start_param', 'debug'],
-    ['chat_type', 'sender'],
-    ['chat_instance', '8428209589180549439'],
-  ]).toString();
+  ]).toString()],
+  ['tgWebAppVersion', '9.1'],
+  ['tgWebAppPlatform', 'tdesktop'],
+  ...
 ```
 
 Чтобы запустить приложение в режиме разработки, используйте скрипт `dev`:
