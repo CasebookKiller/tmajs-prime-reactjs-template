@@ -4,13 +4,13 @@ import { openTelegramLink, shareURL, retrieveLaunchParams } from '@tma.js/sdk-re
 
 import { ChevronRight, Check2, Exclamation, Share } from 'react-bootstrap-icons';
 
-import { botMethod } from '@/api/bot/methods';
-
 import { Panel } from 'primereact/panel';
 import { PrimeReactProvider } from 'primereact/api';
 import { Timeline } from 'primereact/timeline';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Button } from 'primereact/button';
+
+import { botMethod } from '@/api/bot/methods';
 
 import './MissionsPage.css';
 

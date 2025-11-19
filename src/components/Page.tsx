@@ -1,7 +1,7 @@
+import React, { type PropsWithChildren, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
-import { type PropsWithChildren, useEffect } from 'react';
-import React from 'react';
 
 export function Page({ children, back = true }: PropsWithChildren<{
   /**

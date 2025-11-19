@@ -5,7 +5,6 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 
 // Сначала включите стили пользовательского интерфейса Telegram, чтобы наш код мог переопределять CSS пакета.
-import '@telegram-apps/telegram-ui/dist/styles.css';
 import './index.css';
 
 import ReactDOM from 'react-dom/client';

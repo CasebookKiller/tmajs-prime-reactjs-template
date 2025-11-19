@@ -1,12 +1,13 @@
+import { useEffect, type FC } from 'react';
+
 import { openLink } from '@tma.js/sdk-react';
 import { TonConnectButton, useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
 
-import { useEffect, type FC } from 'react';
+import { Panel } from 'primereact/panel';
 
 import { DisplayData } from '@/components/DisplayData/DisplayData.tsx';
 
 import './TONConnectPage.css';
-import { Panel } from 'primereact/panel';
 
 export const TONConnectPage: FC = () => {
   const [ TonConnectUI, setOptions ] = useTonConnectUI();

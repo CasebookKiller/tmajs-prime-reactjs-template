@@ -4,8 +4,6 @@ import { retrieveLaunchParams } from '@tma.js/sdk-react';
 import { routes } from '@/navigation/routes.tsx';
 import React from 'react';
 
-import { AppRoot } from '@telegram-apps/telegram-ui';
-
 export function App() {
   const LP = retrieveLaunchParams(); console.log('LaunchParams: ', LP);
   
@@ -16,14 +14,14 @@ export function App() {
 
   return (
     <React.Fragment>
-      {true && <AppRoot>
+      {true && <div>
         <HashRouter>
           <Routes>
             {routes.map((route) => <Route key={route.path} {...route} />)}
             <Route path='*' element={<Navigate to='/'/>}/>
           </Routes>
         </HashRouter>
-      </AppRoot>}
+      </div>}
     </React.Fragment>
   );
 }

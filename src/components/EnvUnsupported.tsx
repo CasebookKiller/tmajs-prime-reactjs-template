@@ -1,33 +1,33 @@
-import { Placeholder, AppRoot } from '@telegram-apps/telegram-ui';
-import { retrieveLaunchParams, isColorDark, isRGB } from '@tma.js/sdk-react';
-import { useMemo } from 'react';
+import { Panel } from 'primereact/panel';
 
 export function EnvUnsupported() {
-  const [platform, isDark] = useMemo(() => {
-    try {
-      const lp = retrieveLaunchParams();
-      const { bg_color: bgColor } = lp.tgWebAppThemeParams;
-      return [lp.tgWebAppPlatform, bgColor && isRGB(bgColor) ? isColorDark(bgColor) : false];
-    } catch {
-      return ['android', false];
-    }
-  }, []);
 
+  const headerTemplate = (options: any) => {
+    const className = `${options.className} justify-content-space-between`;
+
+    return (
+      <div className={className}>
+        <div className='flex align-items-center gap-2'>
+          <img
+            alt='Telegram стикер'
+            src='https://xelene.me/telegram.gif'
+            style={{ display: 'block', width: '72px', height: '72px' }}
+          />
+          <span className='font-bold'>Ой</span>
+        </div>
+      </div>
+    );
+  };
+          
   return (
-    <AppRoot
-      appearance={isDark ? 'dark' : 'light'}
-      platform={['macos', 'ios'].includes(platform) ? 'ios' : 'base'}
-    >
-      <Placeholder
-        header='Ой'
-        description='Вы используете слишком старую версию Telegram для запуска этого приложения'
+    <div>
+      <div className='app p-0'/>
+      <Panel
+        className='shadow-5 mx-1'
+        headerTemplate={headerTemplate}
       >
-        <img
-          alt='Telegram стикер'
-          src='https://xelene.me/telegram.gif'
-          style={{ display: 'block', width: '144px', height: '144px' }}
-        />
-      </Placeholder>
-    </AppRoot>
+        Вы используете слишком старую версию Telegram для запуска этого приложения
+      </Panel>
+    </div>
   );
 }

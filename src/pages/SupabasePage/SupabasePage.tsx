@@ -1,12 +1,13 @@
 import React, { createContext, FC, useContext, useEffect, useState } from 'react';
-import './SupabasePage.css';
+import { retrieveLaunchParams } from '@tma.js/sdk-react';
+
+import { Panel } from 'primereact/panel';
+import { Page } from '@/components/Page';
 
 import Supabase from '../../supabaseClient';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
-import { retrieveLaunchParams } from '@tma.js/sdk-react';
-import { Panel } from 'primereact/panel';
-import { Page } from '@/components/Page';
+import './SupabasePage.css';
 
 const SBaseContext = createContext(Supabase);
 

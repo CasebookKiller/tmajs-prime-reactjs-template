@@ -1,18 +1,17 @@
 import * as packageJson from '../../../package.json';
 const version = packageJson.version;
 
-import { useState, type FC } from 'react';
+import React, { useState, type FC } from 'react';
+
+import { retrieveLaunchParams } from '@tma.js/sdk-react';
 
 import { Link } from '@/components/Link/Link.tsx';
 import { Page } from '@/components/Page.tsx';
 
-import tonSvg from './ton.svg';
-
-import { retrieveLaunchParams } from '@tma.js/sdk-react';
-
-import React from 'react';
 import { Panel } from 'primereact/panel';
 import { Chip } from 'primereact/chip';
+
+import tonSvg from './ton.svg';
 
 export const IndexPage: FC = () => {
   const LP = retrieveLaunchParams();

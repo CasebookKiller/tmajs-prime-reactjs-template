@@ -1,5 +1,6 @@
-import { retrieveLaunchParams } from '@tma.js/sdk-react';
 import type { FC } from 'react';
+
+import { retrieveLaunchParams } from '@tma.js/sdk-react';
 
 import { DisplayData } from '@/components/DisplayData/DisplayData.tsx';
 import { Page } from '@/components/Page.tsx';
